@@ -47,7 +47,11 @@ app.use(session(sessionConfig));
 
 
 app.get("/", (req, res) => {
-    res.send("HELLO BABE!")
+    res.render("home");
+})
+
+app.get("/login", (req, res) => {
+    res.render("users/login");
 })
 
 app.listen(3000, () => {
