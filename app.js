@@ -54,6 +54,14 @@ app.get("/login", (req, res) => {
     res.render("users/login");
 })
 
+app.get("/register", (req, res) => {
+    res.render("users/register");
+})
+
+app.get("/about", (req, res) => {
+    res.render("about.ejs")
+})
+
 app.listen(3000, () => {
     console.log("Server up");
 }) 
