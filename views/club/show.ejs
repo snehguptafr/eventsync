@@ -17,6 +17,14 @@
                 <button class="btn btn-success">Submit</button>
               </form>
         <% } %> 
+        <% for(let post of club.posts){ %>
+            <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title"><%= post.title %></h5>
+                  <p class="card-text"><%= post.description%></p> 
+                </div>  
+              </div>    
+        <% } %> 
       </div>
       <div class="col-12 col-lg-4">
         <div class="card mb-3">

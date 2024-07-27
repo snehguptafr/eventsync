@@ -16,6 +16,7 @@ const LocalStrategy = require("passport-local");
 
 const User = require("./models/user");
 const Club = require("./models/club");
+const Post = require("./models/post");
 
 const app = express();
 
@@ -149,8 +150,20 @@ app.get("/institutes/:institute", async(req, res) => {
 
 app.get("/institutes/:institute/:clubName", async(req, res) => {
     const { institute, clubName } = req.params;
-    const club = await Club.findOne({clubName, institute});
+    const club = await Club.findOne({clubName, institute}).populate("posts");
     res.render("club/show", { club })
+})
+
+// /institutes/<%- club.institute %>/<%- club._id %>/posts
+
+app.post("/institutes/:institute/:clubId/posts", async(req, res) => {
+    const { institute, clubId } = req.params;
+    const club = await Club.findById(clubId);
+    const rawPost = req.body.post;
+    const post = new Post(rawPost);
+    post.club = clubId;
+    await post.save();
+    res.redirect(`/institutes/${institute}/${club.clubName}`)
 })
 
 app.get("/logout", (req, res) => {
