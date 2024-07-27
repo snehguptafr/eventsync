@@ -1,2 +1,7 @@
 <%- layout('layouts/boilerplate') %>
 <h1>Home</h1>
+<% if(currentUser){ %>
+    <h2>Logged in <%= currentUser %> </h2> 
+<% }  else { %>
+    <h2>logged out</h2> 
+<% } %> 

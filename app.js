@@ -13,6 +13,8 @@ const helmet = require("helmet");
 const MongoStore = require('connect-mongo');
 const LocalStrategy = require("passport-local");
 
+const User = require("./models/user");
+
 const app = express();
 
 app.engine("ejs", ejsMate);
@@ -45,6 +47,17 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+})
 
 app.get("/", (req, res) => {
     res.render("home");
@@ -54,8 +67,35 @@ app.get("/login", (req, res) => {
     res.render("users/login");
 })
 
+app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: "/login"}),  (req, res) => {
+    console.log("logged in")
+    res.redirect("/")
+})
+
 app.get("/register", (req, res) => {
     res.render("users/register");
+})
+
+app.post("/register", async (req, res) => {
+    console.log(req.body)
+    try{
+        const { username, email, password }  = req.body;
+        const user = new User({ email, username });
+        const registeredUser = await User.register(user, password);
+        req.login(registeredUser, err => {
+            // if(err) return next(err)
+            // req.flash("success", "Registered!")
+            // res.redirect("/campgrounds")
+            if(err) res.send("error logging in")
+            else res.redirect("/")
+        })
+    }
+    catch(e){
+        console.log("error occurred")
+        console.log(e)
+        // req.flash("error", e.message)
+        // res.redirect("/register")
+    }
 })
 
 app.get("/about", (req, res) => {
