@@ -1,6 +1,5 @@
-const mongoose = require("mongoose"); //alterbranch
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require("passport-local-mongoose");
 
 const ClubSchema = new Schema({
     clubName: {
@@ -11,13 +10,14 @@ const ClubSchema = new Schema({
         type: String,
         required: true
     },
-    username: {
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    description: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     }
 })
-
-ClubSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("Club", ClubSchema);

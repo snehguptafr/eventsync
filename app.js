@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require("mongoose");
 const session  = require("express-session");
 const ejsMate = require("ejs-mate");
+const bodyParser = require("body-parser");
 const path = require("path");
 const methodOverride = require("method-override");
 const passport = require("passport");
@@ -14,6 +15,7 @@ const MongoStore = require('connect-mongo');
 const LocalStrategy = require("passport-local");
 
 const User = require("./models/user");
+const Club = require("./models/club");
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 const connectionUrl = process.env.DB_URL || 'mongodb://localhost:27017/clubbed-in';
@@ -100,6 +103,32 @@ app.post("/register", async (req, res) => {
 
 app.get("/about", (req, res) => {
     res.render("about.ejs")
+})
+
+app.get("/clubs/add", (req, res) => {
+    // if(res.locals.currentUser){
+    //     res.render("club/create");
+    // }
+    // else{
+    //     res.redirect("/login")
+    // }
+    res.render("club/create");
+
+})
+
+app.post("/clubs", async(req, res) => {
+    console.log(req.body);
+    console.log(req.user)
+    const club = new Club(req.body.club);
+    club.author = req.user._id;
+    await club.save();
+    console.log("club added");
+    res.redirect("/")
+})
+
+app.get("/clubs", async(req, res) => {
+    const clubs = await Club.find({});
+    res.render("club/index", { clubs })
 })
 
 app.listen(3000, () => {
