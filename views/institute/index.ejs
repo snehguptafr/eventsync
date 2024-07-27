@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate')%>
+
+<h1 class="mt-4 mb-3">Institutes</h1>
+<% for(let institute of institutes){ %>
+    <div class="card mb-3 col-6 mx-auto">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><a class="text-decoration-none text-reset" href="/institutes/<%= institute %> "><%= institute %></a></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>

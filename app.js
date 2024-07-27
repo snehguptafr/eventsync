@@ -123,7 +123,7 @@ app.post("/clubs", async(req, res) => {
     club.author = req.user._id;
     await club.save();
     console.log("club added");
-    res.redirect("/")
+    res.redirect(`/institutes/${club.institute}`)
 })
 
 app.get("/clubs", async(req, res) => {
@@ -131,6 +131,31 @@ app.get("/clubs", async(req, res) => {
     res.render("club/index", { clubs })
 })
 
+app.get("/institutes", async(req, res) => {
+    const clubs = await Club.find({});
+    const rawInstitutes = clubs.map(club => {
+        return club.institute
+    })
+    const institutes = new Set(rawInstitutes);
+    res.render("institute/index", { institutes })
+})
+
+app.get("/institutes/:institute", async(req, res) => {
+    const { institute } = req.params;
+    console.log(req.params)
+    const clubs = await Club.find({institute: institute})
+    res.render("club/index", { clubs })
+})
+
+app.get("/logout", (req, res) => {
+    req.logout(err => {
+        if(err){
+            res.send(err);
+        }
+        res.redirect("/institutes");
+    });
+})
+
 app.listen(3000, () => {
     console.log("Server up");
-}) 
+})
