@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title"><%= club.clubName %> </h5>
+                    <h5 class="card-title"><a class="nav-link" href="/institutes/<%= club.institute+"/"+club.clubName %>"><%= club.clubName %></a></h5>
                     <p class="card-text"><%= club.description %> </p>
                     <p class="card-text text-muted"><%= club.institute %> </p>
                 </div>

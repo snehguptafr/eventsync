@@ -147,6 +147,12 @@ app.get("/institutes/:institute", async(req, res) => {
     res.render("club/index", { clubs })
 })
 
+app.get("/institutes/:institute/:clubName", async(req, res) => {
+    const { institute, clubName } = req.params;
+    const club = await Club.findOne({clubName, institute});
+    res.render("club/show", { club })
+})
+
 app.get("/logout", (req, res) => {
     req.logout(err => {
         if(err){
@@ -155,6 +161,7 @@ app.get("/logout", (req, res) => {
         res.redirect("/institutes");
     });
 })
+
 
 app.listen(3000, () => {
     console.log("Server up");
